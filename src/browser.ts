@@ -6,4 +6,6 @@ declare global {
     }
 }
 
-window.$v = new JQue();
+(function() {
+    window.$v = new JQue();
+})();

@@ -1,10 +1,16 @@
 
 import typescript from '@rollup/plugin-typescript';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 
 export default [
     {
         input: "src/browser.ts",
-        plugins: [typescript()],
+        plugins: [
+            commonjs(),
+            resolve(),
+            typescript(),
+        ],
         output: {
             name: 'jque',
             file: 'jque.min.js',
@@ -18,6 +24,8 @@ export default [
     {
         input: "src/jque/all.ts",
         plugins: [
+            commonjs(),
+            resolve(),
             typescript({
                 sourceMap: true,
                 compilerOptions: {
