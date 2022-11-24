@@ -1,0 +1,43 @@
+{
+  "name": "jque",
+  "version": "1.0.0",
+  "description": "web frontend framework.",
+  "main": "dist/all.js",
+  "types": "dist/all.d.ts",
+  "type": "module",
+  "scripts": {
+    "serve": "ts-node-esm src/server.ts",
+    "serve:watch": "nodemon --watch src --ext ts,js --ignore demo --delay 444ms --exec npm run serve",
+    "build": "rollup --config rollup.config.ts --configPlugin typescript"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaosannals/jque.git"
+  },
+  "keywords": [
+    "web",
+    "framework"
+  ],
+  "author": "chaosannals",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chaosannals/jque/issues"
+  },
+  "homepage": "https://github.com/chaosannals/jque#readme",
+  "devDependencies": {
+    "@koa/router": "^12.0.0",
+    "@rollup/plugin-typescript": "^9.0.2",
+    "@types/koa": "^2.13.5",
+    "@types/koa__router": "^12.0.0",
+    "@types/koa-static": "^4.0.2",
+    "@types/node": "^18.11.9",
+    "chalk": "^5.1.2",
+    "koa": "^2.13.4",
+    "koa-static": "^5.0.0",
+    "nodemon": "^2.0.20",
+    "rollup": "^3.4.0",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.4.1",
+    "typescript": "^4.9.3"
+  }
+}
