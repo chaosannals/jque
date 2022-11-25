@@ -6,6 +6,4 @@ declare global {
     }
 }
 
-(function() {
-    window.$v = jQue;
-})();
+window.$v = jQue;

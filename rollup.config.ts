@@ -2,6 +2,7 @@
 import typescript from '@rollup/plugin-typescript';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import terser from '@rollup/plugin-terser';
 
 export default [
     {
@@ -10,6 +11,7 @@ export default [
             commonjs(),
             resolve(),
             typescript(),
+            terser(),
         ],
         output: {
             name: 'jque',
@@ -38,7 +40,8 @@ export default [
                 exclude: [
                     "src/browser.ts",
                 ],
-            })
+            }),
+            terser(),
         ],
         output: {
             dir: 'dist',
