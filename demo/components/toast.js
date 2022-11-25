@@ -1,5 +1,7 @@
-function toast(scope) {
-    return scope.compose('div', {
+function toast(parentScope) {
+    // 必须采用这种形式，Compose 包揽住作用域。
+    // 类似 Jetpack Compose 的 @Composable 注解
+    return parentScope.compose('div', {
         class: 'jque-toast',
         style: {
             display: 'flex',
@@ -14,28 +16,27 @@ function toast(scope) {
             alignItems: 'center',
             pointerEvents: 'none',
         },
-    }, (s1) => {
-        const data = s1.remember(() => {
+    }, (scope) => {
+        const data = scope.remember(() => {
             return {
                 boxes: [],
             };
         });
-        console.log('s1', data.boxes);
+
         for (let box of data.boxes) {
-            console.log('for');
-            s1.view('div', {
+            scope.view('div', {
                 class: 'jque-toast-box',
                 style: {
-                    padding: '5em 2em',
-                    margin: '2em',
+                    padding: '.5em 2em',
+                    margin: '.5em',
                     borderRadius: '1em',
                     background: 'red',
                     color: 'white',
                 },
             }, (s) => s.text(box.text));
         }
+
         return (text, ms = 3000) => {
-            console.log('toast');
             const now = (new Date).getTime();
             const box = {
                 text: text,
@@ -46,7 +47,6 @@ function toast(scope) {
                 const tick = () => {
                     const n = (new Date).getTime();
                     data.boxes = data.boxes.filter(i => i.startTime > n);
-                    console.log('toast tick', n, data.boxes);
                     if (data.boxes.length > 0) {
                         setTimeout(tick, 444);
                     }

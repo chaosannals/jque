@@ -3,6 +3,9 @@ import { JQueHTMLElementAttrs, express } from "./attrs";
 export type JQueComposeAction = (s: JQueScope, ...params: any[]) => any | undefined;
 export type JQueRememberAction = () => any;
 
+/**
+ * 作用域，用来动态刷新时候确认刷新范围。
+ */
 export class JQueScope {
     public element: HTMLElement;
     public composeAction: JQueComposeAction;
@@ -28,7 +31,6 @@ export class JQueScope {
                     return Reflect.get(obj, prop, r);
                 },
                 set: (obj, prop, value) => {
-                    console.log('onset', this);
                     const r = Reflect.set(obj, prop, value);
                     this.element.innerHTML = "";
                     this.composeAction(this);

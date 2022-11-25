@@ -19,16 +19,20 @@
 <body>
     <div id="app"></div>
     <script src="/jque.js"></script>
-    <script src="/js/toast.js"></script>
+    <script src="/components/toast.js"></script>
     <script>
+        // 注意，每次进入内容函数， scope 都是各层的，只是名字一样而已。
         $v.app('#app', (scope) => {
-            // const t = scope.compose(toast);
             const t = toast(scope);
-            scope.view('button', {
+            scope.view('div', {
+                
+            }, (scope) => {
+                scope.view('button', {
                 onClick: () => {
                     t("一条提示");
                 },
             }, s => s.text("点击"));
+            })
         });
     </script>
 </body>
