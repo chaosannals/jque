@@ -12,7 +12,7 @@
   "type": "module",
   "scripts": {
     "serve": "ts-node-esm src/server.ts",
-    "serve:watch": "nodemon --watch src --ext ts,js --ignore demo --delay 1444ms --exec npm run serve",
+    "serve:watch": "nodemon --watch src --ext ts,js --ignore demo --delay 1444ms --exec ts-node-esm src/server.ts",
     "build": "rollup --config rollup.config.ts --configPlugin typescript"
   },
   "repository": {

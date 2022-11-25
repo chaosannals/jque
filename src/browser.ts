@@ -1,4 +1,4 @@
-import { JQue } from './jque/all';
+import { jQue, JQue } from './jque/all';
 
 declare global {
     interface Window {
@@ -7,5 +7,5 @@ declare global {
 }
 
 (function() {
-    window.$v = new JQue();
+    window.$v = jQue;
 })();

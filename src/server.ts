@@ -13,6 +13,7 @@ const SERVE_PORT = 44444;
 
 const app = new Koa();
 const router = new Router();
+const now = new Date();
 
 router.get('/jque.js', async (ctx, next) => {
     const rollupConfig = await import(pathToFileURL(ROLLUP_CONF_PATH).toString());
@@ -31,4 +32,11 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 app.listen(SERVE_PORT);
-console.log('serve: ', chalk.blue(DEMO_DIR), 'on port:', chalk.cyan(SERVE_PORT));
+console.log(
+    chalk.white.bgCyan.bold(now),
+    chalk.white('serve:'),
+    chalk.blue(DEMO_DIR),
+    'on port:',
+    chalk.cyan(SERVE_PORT)
+);
+console.log(chalk.cyan.underline(`http://127.0.0.1:${SERVE_PORT}`));

@@ -1,16 +1,36 @@
 <!DOCTYPE html>
 <html leng="zh">
-    <head>
-        <meta charset="utf-8"/>
-        <title>JQue Demo</title>
-    </head>
-    <body>
-        <div class="app"></div>
-        <script src="/jque.js"></script>
-        <script>
-            $v.app('#app', () => {
-                
-            });
-        </script>
-    </body>
+
+<head>
+    <meta charset="utf-8" />
+    <title>JQue Demo</title>
+    <style>
+        html,
+        body,
+        #app {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+    <script src="/jque.js"></script>
+    <script src="/js/toast.js"></script>
+    <script>
+        $v.app('#app', (scope) => {
+            // const t = scope.compose(toast);
+            const t = toast(scope);
+            scope.view('button', {
+                onClick: () => {
+                    t("一条提示");
+                },
+            }, s => s.text("点击"));
+        });
+    </script>
+</body>
+
 </html>

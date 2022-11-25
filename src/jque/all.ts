@@ -1,21 +1,15 @@
-import { JQueApplication } from './app';
-import { VNode } from './vnode';
-import { compose } from './attrs';
-import type { VNodeAttrs } from './attrs';
+import { JQueScope, JQueComposeAction } from './scope';
 
-export class JQue {
-    private vnode: VNode;
+export interface JQue {
+    app(selector: string, inner: Function): void;
 
-    constructor() {
-        this.vnode = new VNode();
-    }
-
-    app(selector: string, inner: Function) {
-
-    }
-
-    view(attrs: VNodeAttrs, inner: Function) {
-        const content = inner();
-        return `<div ${compose(attrs)}>${content}</div>`;
-    }
 }
+
+export const jQue : JQue = {
+    app(selector: string, action: JQueComposeAction) {
+        const element = document.body.querySelector(selector) as HTMLElement;
+        const scope = new JQueScope(element);
+        scope.composeAction = action;
+        action(scope);
+    },
+};
