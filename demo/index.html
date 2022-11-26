@@ -25,7 +25,11 @@
         $v.app('#app', (scope) => {
             const t = toast(scope);
             scope.view('div', {
-                
+                class: 'main',
+                style: {
+                    display: 'flex',
+                    
+                },
             }, (scope) => {
                 scope.view('button', {
                 onClick: () => {
