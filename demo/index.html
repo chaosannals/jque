@@ -24,18 +24,20 @@
         // 注意，每次进入内容函数， scope 都是各层的，只是名字一样而已。
         $v.app('#app', (scope) => {
             const t = toast(scope);
+            scope.view('span', {}, (s) => s.text('aaaa'));
             scope.view('div', {
                 class: 'main',
                 style: {
                     display: 'flex',
-                    
+
                 },
             }, (scope) => {
                 scope.view('button', {
-                onClick: () => {
-                    t("一条提示");
-                },
-            }, s => s.text("点击"));
+                    onClick: () => {
+                        console.log('onclick');
+                        t("一条提示");
+                    },
+                }, s => s.text("点击"));
             })
         });
     </script>

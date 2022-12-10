@@ -3,25 +3,44 @@ import { JQueHTMLElementAttrs, express } from "./attrs";
 export type JQueComposeAction = (s: JQueScope, ...params: any[]) => any | undefined;
 export type JQueRememberAction = () => any;
 
+export interface JQueScopable {
+    compose(action: JQueComposeAction, ...params: any[]): any;
+    remember(action: JQueRememberAction): any;
+    view(tag: string, attrs: JQueHTMLElementAttrs, action: JQueComposeAction, sign: string | null): any;
+    text(content: string): void;
+}
+
 /**
  * 作用域，用来动态刷新时候确认刷新范围。
  * 
  */
 export class JQueScope {
-    private composeAction: (...params: any[]) => any;
-    public element: HTMLElement;
-    public children: Array<JQueScope>;
+    public composeAction: (...params: any[]) => any;
+    public element: HTMLElement | null;
+    public elementAttr: JQueHTMLElementAttrs | null;
+    public children: { [key: string]: JQueScope };
+    public parent: JQueScope | null;
     public data: any | undefined;
 
-    constructor(element: HTMLElement) {
+    constructor() {
         this.composeAction = () => { };
-        this.element = element;
-        this.children = [];
+        this.element = null;
+        this.elementAttr = null;
+        this.parent = null;
+        this.children = {};
     }
 
-    compose(tag: string, attrs: JQueHTMLElementAttrs, action: JQueComposeAction, ...params: any[]): any {
-        const scope = this.scoped(tag, attrs, action);
+    compose(action: JQueComposeAction, ...params: any[]): any {
+        const key = this.getCallMark();
+        const scope = this.children[key] ?? this.scoped(key, action);
         return scope.composeAction(...params);
+    }
+
+    getCallMark(deep: number = 3) {
+        // return new Error().stack;
+        const stack = new Error().stack?.split('\n').map(i => i.trim());
+        return stack![deep];
+        // return stack![stack!.length - deep];
     }
 
     remember(action: JQueRememberAction): any {
@@ -32,11 +51,10 @@ export class JQueScope {
                     return Reflect.get(obj, prop, r);
                 },
                 set: (obj, prop, value) => {
+                    console.log('remember set', this.composeAction);
                     const r = Reflect.set(obj, prop, value);
+                    this.clear();
                     this.composeAction();
-                    this.children.forEach(child => {
-                        child.composeAction();
-                    });
                     return r;
                 },
             });
@@ -44,29 +62,56 @@ export class JQueScope {
         return this.data;
     }
 
-    scoped(tag: string, attrs: JQueHTMLElementAttrs, action: JQueComposeAction): JQueScope {
-        const element = document.createElement(tag);
-        const scope = new JQueScope(element);
-        scope.composeAction = () => {
-            if (scope.element) {
-                const ne = document.createElement(tag);
-                this.element.replaceChild(ne, scope.element);
-                scope.element = ne;
+    scoped(key: string, action: JQueComposeAction): JQueScope {
+        console.log('key：', key);
+        const scope = new JQueScope();
+        scope.parent = this;
+        scope.composeAction = (...params) => {
+            if (scope.element && scope.elementAttr) {
+                express(scope.element, scope.elementAttr);
             }
-            express(scope.element, attrs);
-            return action(scope);
+            console.log('children', scope.children);
+            // scope.children = {};
+            return action(scope, ...params);
         };
-        this.element.appendChild(element);
-        this.children.push(scope);
+        this.children[key] = scope;
         return scope;
     }
 
-    view(tag: string, attrs: JQueHTMLElementAttrs, action: JQueComposeAction): any {
-        const scope = this.scoped(tag, attrs, action);
+    view(tag: string, attrs: JQueHTMLElementAttrs, action: JQueComposeAction, sign: string | null): any {
+        const key = `${this.getCallMark()}-${sign}`;
+        let scope = this.children[key];
+        if (!scope) {
+            const element = document.createElement(tag);
+            scope = this.scoped(key, action);
+            scope.element = element;
+            
+            // 向上找父元素
+            let pointer: JQueScope | null = this;
+            while (pointer != null && !pointer.element) {
+                pointer = pointer.parent;
+            }
+            pointer?.element?.appendChild(element);
+        }
+        scope.elementAttr = attrs;
         return scope.composeAction();
     }
 
     text(content: string) {
-        this.element.innerHTML = content;
+        if (this.element) {
+            this.element.innerHTML = content;
+        }
+    }
+
+    clear() {
+        for (let ck of Object.keys(this.children)) {
+            let child = this.children[ck];
+            child.clear();
+        }
+        this.children = {};
+        if (this.element) {
+            this.parent?.element?.removeChild(this.element);
+            this.element = null;
+        }
     }
 }
