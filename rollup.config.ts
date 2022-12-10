@@ -10,7 +10,9 @@ export default [
         plugins: [
             commonjs(),
             resolve(),
-            typescript(),
+            typescript({
+                sourceMap: true,
+            }),
             terser(),
         ],
         output: {

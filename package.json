@@ -1,6 +1,6 @@
 {
   "name": "jque",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "web frontend framework.",
   "main": "dist/all.js",
   "types": "dist/all.d.ts",
