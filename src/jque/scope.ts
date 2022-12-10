@@ -1,6 +1,6 @@
 import { JQueHTMLElementAttrs, express } from "./attrs";
 
-export type JQueComposeAction = (s: JQueScope, ...params: any[]) => any | undefined;
+export type JQueComposeAction = (s: JQueScopable, ...params: any[]) => any | undefined;
 export type JQueRememberAction = () => any;
 
 export interface JQueScopable {
@@ -8,13 +8,14 @@ export interface JQueScopable {
     remember(action: JQueRememberAction): any;
     view(tag: string, attrs: JQueHTMLElementAttrs, action: JQueComposeAction, sign: string | null): any;
     text(content: string): void;
+    clear(): void;
 }
 
 /**
  * 作用域，用来动态刷新时候确认刷新范围。
  * 
  */
-export class JQueScope {
+export class JQueScope implements JQueScopable {
     public composeAction: (...params: any[]) => any;
     public element: HTMLElement | null;
     public elementAttr: JQueHTMLElementAttrs | null;
@@ -63,7 +64,7 @@ export class JQueScope {
     }
 
     scoped(key: string, action: JQueComposeAction): JQueScope {
-        console.log('key：', key);
+        // console.log('key：', key);
         const scope = new JQueScope();
         scope.parent = this;
         scope.composeAction = (...params) => {

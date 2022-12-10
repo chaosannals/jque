@@ -44,7 +44,7 @@ function toast(parentScope) {
         return (text, ms = 3000) => {
             const now = (new Date).getTime();
             const box = {
-                text: text + '-' + data.boxes.length,
+                text: text + '-' + now,
                 startTime: now + ms,
             };
             data.boxes.push(box);

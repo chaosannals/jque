@@ -1,7 +1,7 @@
 import { JQueScope, JQueComposeAction } from './scope';
 
 export interface JQue {
-    app(selector: string, inner: Function): void;
+    app(selector: string, action: JQueComposeAction): void;
 
 }
 
